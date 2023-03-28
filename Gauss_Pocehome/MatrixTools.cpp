@@ -67,7 +67,7 @@ void print_matrix(double** matrix, size_t n) {
 		}
 		std::cout << std::endl;
 		for (size_t j = 0; j < n; j++) {
-			std::cout << "|" << matrix[i][j] << "\t";
+			printf_s("|%7.3f", matrix[i][j]);
 		}
 		std::cout << "|" << std::endl;
 	}
@@ -81,19 +81,11 @@ void print_matrix(double** matrix, size_t n) {
 
 void print_vector(double* vector, size_t n) {
 	std::cout << "+-------+" << std::endl;
+
 	for (size_t i = 0; i < n; i++) {
-		std::cout << "|" << vector[i] << "\t|" << std::endl;
+		printf_s("|%7.3f|\n", vector[i]);
 		std::cout << "+-------+" << std::endl;
 	}
-	/*std::cout << std::endl;
-	for (size_t i = 0; i < n; i++) {
-		std::cout << "|" << vector[i] << "\t";
-	}
-	std::cout << "|" << std::endl;
-	std::cout << "+";
-	for (size_t j = 0; j < n; j++) {
-		std::cout << "-------+";
-	}*/
 	std::cout << std::endl;
 }
 
