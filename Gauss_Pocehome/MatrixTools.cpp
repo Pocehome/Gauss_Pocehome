@@ -1,6 +1,7 @@
 #include "MatrixTools.hpp"
 #include <iostream>
 #include <random>
+#include <cmath>
 
 void Gauss(double** A, double* b, double* x, size_t n) {
 	// пр€мой ход
@@ -24,63 +25,37 @@ void Gauss(double** A, double* b, double* x, size_t n) {
 	}
 }
 
-void matrix_rand_fill(double** matrix, size_t n) {
-	for (size_t i = 0; i < n; i++) {
-		for (size_t j = 0; j < n; j++) {
-			matrix[i][j] = rand() / double(1000);
-		}
-	}
-}
-
-void matrix_hand_fill(double** matrix, size_t n) {
-	for (size_t i = 0; i < n; i++) {
-		for (size_t j = 0; j < n; j++) {
-			std::cin >> matrix[i][j];
-		}
-	}
-}
-
-void vector_rand_fill(double* vector, size_t n) {
-	for (size_t i = 0; i < n; i++) {
-		vector[i] = rand() / double(1000);
-	}
-}
-
-void vector_hand_fill(double* vector, size_t n) {
-	for (size_t i = 0; i < n; i++) {
-		std::cin >> vector[i];
-	}
-}
-
 double** create_rand_matrix(size_t n) {
 	double** matrix = new double* [n];
 	for (size_t i = 0; i < n; i++) {
-		matrix[i] = new double[n];
+		matrix[i] = create_rand_vector(n);
 	}
-	matrix_rand_fill(matrix, n);
 	return matrix;
 }
 
 double** create_hand_matrix(size_t n) {
-	std::cout << "¬ведите матрицу A: ";
 	double** matrix = new double* [n];
 	for (size_t i = 0; i < n; i++) {
-		matrix[i] = new double[n];
+		std::cout << "¬ведите р€д " << i+1 << " матрицы:" << std::endl;
+		matrix[i] = create_hand_vector(n);
 	}
-	matrix_hand_fill(matrix, n);
 	return matrix;
 }
 
 double* create_rand_vector(size_t n) {
 	double* vector = new double[n];
-	vector_rand_fill(vector, n);
+	for (size_t i = 0; i < n; i++) {
+		vector[i] = rand() / double(1000);
+	}
 	return vector;
 }
 
 double* create_hand_vector(size_t n) {
-	std::cout << "¬ведите вектор b: ";
 	double* vector = new double[n];
-	vector_hand_fill(vector, n);
+	for (size_t i = 0; i < n; i++) {
+		std::cin >> vector[i];
+	}
+	std::cout << std::endl;
 	return vector;
 }
 
@@ -96,7 +71,7 @@ void print_matrix(double** matrix, size_t n) {
 		}
 		std::cout << "|" << std::endl;
 	}
-	std::cout << "|";
+	std::cout << "+";
 	for (size_t j = 0; j < n; j++) {
 		std::cout << "-------+";
 	}
@@ -105,11 +80,12 @@ void print_matrix(double** matrix, size_t n) {
 }
 
 void print_vector(double* vector, size_t n) {
-	std::cout << "+";
-	for (size_t j = 0; j < n; j++) {
-		std::cout << "-------+";
+	std::cout << "+-------+" << std::endl;
+	for (size_t i = 0; i < n; i++) {
+		std::cout << "|" << vector[i] << "\t|" << std::endl;
+		std::cout << "+-------+" << std::endl;
 	}
-	std::cout << std::endl;
+	/*std::cout << std::endl;
 	for (size_t i = 0; i < n; i++) {
 		std::cout << "|" << vector[i] << "\t";
 	}
@@ -117,6 +93,57 @@ void print_vector(double* vector, size_t n) {
 	std::cout << "+";
 	for (size_t j = 0; j < n; j++) {
 		std::cout << "-------+";
-	}
+	}*/
 	std::cout << std::endl;
+}
+
+double* mult_matrix_vector(double** matrix, double* vector, size_t n) {
+	double* res{ new double[n] {0} };
+
+	for (size_t i = 0; i < n; i++) {
+		for (size_t j = 0; j < n; j++) {
+			res[i] += matrix[i][j] * vector[j];
+		}
+	}
+
+	return res;
+}
+
+double* vector_copy(double* vector, size_t n) {
+	double* copied_vector = new double[n];
+	for (size_t i = 0; i < n; i++) {
+		copied_vector[i] = vector[i];
+	}
+	return copied_vector;
+}
+
+double** matrix_copy(double** matrix, size_t n) {
+	double** copied_matrix = new double* [n];
+	for (size_t i = 0; i < n; i++) {
+		copied_matrix[i] = vector_copy(matrix[i], n);
+	}
+	return copied_matrix;
+}
+
+void del_vector(double* vector) {
+		delete[] vector;
+}
+
+void del_matrix(double** matrix, size_t n) {
+	for (size_t i = 0; i < n; i++) {
+		delete[] matrix[i];
+	}
+	delete[] matrix;
+}
+
+double error_Gauss(double** A, double* x, double* b, size_t n) {
+	double* Ax = mult_matrix_vector(A, x, n);
+	double max_err = -1;
+	for (size_t i = 0; i < n; i++) {
+		double i_err = abs(Ax[i] - b[i]);
+		if (i_err > max_err) {
+			max_err = i_err;
+		}
+	}
+	return max_err;
 }
