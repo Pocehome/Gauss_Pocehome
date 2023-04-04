@@ -4,7 +4,7 @@
 #include <cmath>
 
 void Gauss(double** A, double* b, double* x, size_t n) {
-	// пр€мой ход
+	// straight stroke
 	for (size_t i = 0; i < n; i++) {
 		for (size_t j = i + 1; j < n; j++) {
 			double coef = A[j][i] / A[i][i];
@@ -15,7 +15,7 @@ void Gauss(double** A, double* b, double* x, size_t n) {
 		}
 	}
 
-	// обратный ход
+	// reverse stroke
 	for (int i = n - 1; i >= 0; i--) {
 		x[i] = 0;
 		for (int j = i + 1; j < n; j++) {
@@ -36,7 +36,7 @@ double** create_rand_matrix(size_t n) {
 double** create_hand_matrix(size_t n) {
 	double** matrix = new double* [n];
 	for (size_t i = 0; i < n; i++) {
-		std::cout << "¬ведите р€д " << i+1 << " матрицы:" << std::endl;
+		std::cout << "Input " << i+1 << " row of the matrix:" << std::endl;
 		matrix[i] = create_hand_vector(n);
 	}
 	return matrix;
